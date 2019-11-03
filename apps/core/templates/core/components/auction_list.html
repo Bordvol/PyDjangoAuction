@@ -1,0 +1,24 @@
+{% load static %}
+
+<div class="container">
+  <div class="row">
+    {% for auctions in auction_list %}
+      <div class="col-12 col-sm-8 col-md-6 col-lg-4">
+        <div class="card">
+        {% if auction.lot_id.image %}
+          <a href="{{ product.get_absolute_url }}"><img class="card-img" height="300" src="{{ product.image.url }}" alt="Vans"></a>
+        {% else %}
+          <a href="{{ product.get_absolute_url }}"><img class="card-img" height="300" src="{% static 'img/no_img.png' %}" alt="Vans"></a>
+        {% endif %}
+          <div class="card-body">
+            <h4 class="card-title">{{ auction.name }}</h4>
+            <h6 class="card-subtitle mb-2 text-muted"><a href="#">{{ auction.name }}</a></h6>
+            <p class="card-text">{{ auction.current_price }}</p>
+            <a href="#" class="btn btn-danger mt-3">Make a bet</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    {% endfor %}
+  </div>
+</div>

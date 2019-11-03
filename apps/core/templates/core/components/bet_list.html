@@ -1,0 +1,20 @@
+{% load static %}
+
+<div class="container">
+  <div class="row">
+    {% for bets in bets_list %}
+      <div class="col-12 col-sm-8 col-md-6 col-lg-4">
+        <div class="card">
+          <div class="card-body">
+            <h4 class="card-title">{{ bet.id }}</h4>
+            <h6 class="card-subtitle mb-2 text-muted"><a href="#">{{ lot.name }}</a></h6>
+            <h6 class="card-subtitle mb-2 text-muted"><a href="#">{{ lot.name }}</a></h6>
+            <p class="card-text">{{ bet.amount }}</p>
+            <p class="card-text">{{ bet.bet_date }}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    {% endfor %}
+  </div>
+</div>
