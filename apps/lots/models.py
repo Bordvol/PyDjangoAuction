@@ -3,7 +3,8 @@ from django.conf import settings
 from django.utils.text import slugify
 from autoslug import AutoSlugField
 from django.urls import reverse
-from django.utils.text import slugify
+from users import models as user_models
+
 
 # Create your models here.
 class category(models.Model):
@@ -25,7 +26,7 @@ class category(models.Model):
         super().save(*args, **kwargs)
 
 class lot(models.Model):
-    user_id = models.ForeignKey(settings.AUTH_USER_MODEL, verbose_name='Lot''s owner', on_delete=models.PROTECT, null=True, related_name='lot_user')
+    user_id = models.ForeignKey(user_models.CustomUser, verbose_name='Lot''s owner', on_delete=models.PROTECT, null=True, related_name='lot_user')
     category_id = models.ForeignKey(category, verbose_name='Category', on_delete=models.SET_NULL, null=True, related_name='lot_category')
     name = models.CharField('Lot name', max_length=255, blank=False, unique=False)
     info = models.TextField('Additional information', blank=True)
@@ -43,5 +44,5 @@ class lot(models.Model):
         return reverse('lots:lot', kwargs={'pk': self.pk})
 
     def save(self, *args, **kwargs):
-        self.slug = slugify(self.title, allow_unicode=True)
+        self.slug = slugify(self.name, allow_unicode=True)
         super().save(*args, **kwargs)

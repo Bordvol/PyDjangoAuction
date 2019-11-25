@@ -3,19 +3,14 @@
 {% load static %}
 
 {% block content %}
-
+{{ auction.lot_id }}
   <div class="jumbotron jumbotron-fluid">
     <div class="container">
-      <h1 class="display-4">{{ auction.name|name }}</h1>
+      <h1 class="display-4">{{ auction.starting_price }}</h1>
       <p class="lead">{{ auction.current_price }}</p>
     </div>
   </div>
-
-  {% if auction.lot_id.image %}
-    <a href="{{ product.get_absolute_url }}"><img class="card-img" height="300" src="{{ product.image.url }}" alt="Vans"></a>
-  {% else %}
-    <a href="{{ product.get_absolute_url }}"><img class="card-img" height="300" src="{% static 'img/no_img.png' %}" alt="Vans"></a>
-  {% endif %}
-
-  {% include 'core/components/auction_list.html' %}
+  {% for bet in bets_list %}
+     {{ bet.amount }}
+  {% endfor %}
 {% endblock content %}

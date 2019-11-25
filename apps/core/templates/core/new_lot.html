@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+{% block content %}
+Add a new lot
+
+      {% if user.is_authenticated %}
+        Привет, {{ user.username }}!
+
+  <form action="{% url 'core:new_lot' %}" method="post" novalidate>
+    {% csrf_token %}
+    <table>
+      {{ form.as_table }}
+    </table>
+    <button type="submit">Save</button>
+  </form>
+    {% else %}
+      <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#login">Login</button>
+      {% endif %}
+
+{% endblock content %}

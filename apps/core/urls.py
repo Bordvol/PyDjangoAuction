@@ -1,8 +1,11 @@
-from django.urls import path, re_path
+from django.urls import path, re_path, include
 from django.contrib import admin
-from apps.core.views import (
-    index,
-    auction_list,
+from core.views import (
+    IndexView,
+    AuctionListView,
+    AuctionView,
+    NewLotView,
+  #  auctions_list,
     auction,
     lot,
     category_list,
@@ -12,12 +15,9 @@ from apps.core.views import (
 app_name = 'core'
 
 urlpatterns = [
-    path('index/', index, name='index'),
-    path('', index, name='index'),
-    path('auctions/', auction_list, name='auction_list'),
-    path('auctions/<pk>/', auction, name='auction'),
-    path('lots/<pk>/', lot, name='lot'),
-    path('categories/', category_list, name='category-list'),
-    path('categories/<slug>/', category, name='category'),
-    # re_path(r'^categories/(?P<slug>[\w-_]+)/$', func, name='category')
+    path('', IndexView.as_view(), name='index'),
+    path('auctions/', AuctionListView.as_view(), name='auctions_list'),
+    path('auctions/<pk>/', AuctionView.as_view(), name='auction'),
+    path('new_lot/', NewLotView.as_view(), name='new_lot'),
+    path('users/', include('users.urls', namespace='users')),
 ]
