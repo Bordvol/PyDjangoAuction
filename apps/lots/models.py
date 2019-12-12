@@ -16,7 +16,10 @@ class category(models.Model):
     updated_at = models.DateTimeField(auto_now=True, null=True)
 
     def __str__(self):
-        return f'{self.name}, if {self.parent_id} != None: {self.parent_id}'
+        if {self.parent_id==None}:
+            return f'{self.name}'
+        else:
+            return f'{self.name}, {self.parent_id}'
 
     def get_absolute_url(self):
         return reverse('core:category', kwargs={'slug': self.slug})
@@ -32,7 +35,7 @@ class lot(models.Model):
     info = models.TextField('Additional information', blank=True)
     url = models.URLField(default='https://google.com')
     is_enabled = models.BooleanField('is enabled', default = True)
-    image = models.ImageField(verbose_name='Picture',upload_to='product',null=True,blank=True)
+    image = models.ImageField(verbose_name='image',upload_to='lot',null=True,blank=True)
     slug = AutoSlugField(populate_from='name',unique=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True, null=True)
     updated_at = models.DateTimeField(auto_now=True, null=True)
@@ -41,7 +44,7 @@ class lot(models.Model):
         return f'{self.name}, {self.category_id}, '
 
     def get_absolute_url(self):
-        return reverse('lots:lot', kwargs={'pk': self.pk})
+        return reverse('core:lot', kwargs={'pk': self.pk})
 
     def save(self, *args, **kwargs):
         self.slug = slugify(self.name, allow_unicode=True)

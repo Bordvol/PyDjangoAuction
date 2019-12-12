@@ -46,6 +46,9 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'autoslug',
+    'rest_framework',
+    'django_filters',
+    'django_celery_beat',
 ] + LOCAL_APPS
 
 MIDDLEWARE = [
@@ -129,13 +132,48 @@ USE_TZ = True
 STATICFILES_DIRS = (
     os.path.join(PROJECT_DIR, 'static'),
 )
-STATIC_URL = '/static/'
+STATIC_URL = '/apps/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'static_content', 'static')
 
-MEDIA_URL = '/media/'
+MEDIA_URL = '/apps/static_content/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'static_content', 'media')
+
 
 LOGIN_REDIRECT_URL = '/'
 LOGIN_URL = '/users/login/'
 AUTH_USER_MODEL = 'users.CustomUser'
 
+
+CACHES = {
+    'default': {
+        'BACKEND': 'django_redis.cache.RedisCache',
+        'LOCATION': 'redis://127.0.0.1:6379/',
+        'OPTIONS': {
+            'CLIENT_CLASS': 'django_redis.client.DefaultClient',
+        }
+    }
+}
+
+
+# celery
+CELERY_BROKER_URL = 'redis://localhost:6379'
+CELERY_RESULT_BACKEND = 'redis://localhost:6379'
+CELERY_ACCEPT_CONTENT = ['application/json']
+CELERY_RESULT_SERIALIZER = 'json'
+CELERY_TASK_SERIALIZER = 'json'
+
+
+REST_FRAMEWORK = {
+    # 'DEFAULT_RENDERER_CLASSES': [
+    #     'rest_framework.renderers.JSONRenderer',
+    # ],
+    # 'DEFAULT_PARSER_CLASSES': [
+    #     'rest_framework.parsers.JSONParser',
+    # ],
+    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.LimitOffsetPagination',
+    'PAGE_SIZE': 3,
+    'DEFAULT_FILTER_BACKENDS': ['django_filters.rest_framework.DjangoFilterBackend'],
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework.authentication.SessionAuthentication',
+    )
+}

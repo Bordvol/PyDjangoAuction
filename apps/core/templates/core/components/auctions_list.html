@@ -1,24 +1,62 @@
+{% block content %}
 {% load static %}
-
-<div class="container">
-  <div class="row">
+Total auctions count: {{ auctions_count }}
+<br>
+Active auctions count: {{ active_auctions_count }}
+<hr>
+  <table>
     {% for auction in auctions_list %}
-      <div class="col-12 col-sm-8 col-md-6 col-lg-4">
-        <div class="card">
+     <tr>
+       <td><a href="{{ auction.get_absolute_url }}"><b>Auction:</b><h4 class="card-title">{{ auction.lot_id.name }}</h4></a>
         {% if auction.lot_id.image %}
-          <a href="{{ product.get_absolute_url }}"><img class="card-img" height="300" src="{{ product.image.url }}" alt="Vans"></a>
+          <a href="{{ auction.get_absolute_url }}"><img class="card-img"  style="width: 200px;" src="{{ auction.lot_id.image.url }}" alt="Vans"></a>
         {% else %}
-          <a href="{{ product.get_absolute_url }}"><img class="card-img" height="300" src="{% static 'img/no_img.png' %}" alt="Vans"></a>
+          <a href="{{ auction.get_absolute_url }}"><img class="card-img"  style="width: 200px;" src="{% static 'img/no_img.png' %}" alt="Vans"></a>
         {% endif %}
+         </td>
+         <td>
           <div class="card-body">
-            <h4 class="card-title">{{ auction.name }}</h4>
-            <h6 class="card-subtitle mb-2 text-muted"><a href="#">{{ auction.name }}</a></h6>
-            <p class="card-text">{{ auction.current_price }}</p>
-            <a href="#" class="btn btn-danger mt-3">Make a bet</a>
-            </div>
+            <p>starting price: <b>{{ auction.starting_price }}</b></p>
+            <p>current price:  <b>{{ auction.current_price }}</b></p>
+            <p>blitz price:  <b>{{ auction.blitz_price }}</b></p>
+            <p>created at:  <b>{{ auction.created_at }}</b></p>
+            <p>end time:  <b>{{ auction.bid_end_datetime }}</b></p>
           </div>
-        </div>
-      </div>
+          </td>
+         <td>
+            {% if auction.is_finished == True %}
+                <b><font color="red" >AUCTION FINISHED!!!</font></b><br>
+                WINNER: <b>{{auction.winner.get_full_name}}</b><br>
+                FINAL BET  <b>{{auction.current_price}}</b>
+            {% else %}
+                 <b><font color="green" >AUCTION CONTINUOUS...</font></b><br>
+            {% endif %}
+         </td>
+       <td>
+       </td>
+       </tr>
     {% endfor %}
-  </div>
-</div>
+  </table>
+
+  {% if auctions_list.has_previous %}
+    <a href="?page={{ auctions_list.previous_page_number }}"><b><<</b> </a>
+  {% endif %}
+
+  {% for auction in auctions_list.paginator.page_range %}
+    {% if auction == auctions_list.number %}
+      {{ page }}
+    {% else %}
+      <a href="?page={{ page }}">{{ page }}</a>
+    {% endif %}
+  {% endfor %}
+
+  {% if auctions_list.has_next %}
+    <a href="?page={{ auctions_list.next_page_number }}"><b>>></b></a>
+  {% endif %}
+
+
+<br><br>
+
+<a href="{% url 'core:new_auction' %}" class="btn btn-danger mt-3">Create a new auction</a>
+{% endblock content %}
+

@@ -24,7 +24,7 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
 
     @property
     def get_full_name(self):
-        return self.name
+        return '{} {}'.format(self.name.title(), self.surname.title())
 
     @property
     def get_short_name(self):

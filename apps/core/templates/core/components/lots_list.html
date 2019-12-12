@@ -1,0 +1,35 @@
+{% block content %}
+{% load static %}
+Total my lots count: {{ lots_count }}
+<br>
+My active lots count: {{ active_lots_count }}
+<hr>
+    {% for lot in lots_list %}
+            <a href="{{ lot.get_absolute_url }}">  <h6 class="card-title">{{ lot.id }}: {{ lot.name }}</h6></a>
+            <b>{{ lot.category_id }} <br></b>
+            {{ lot.info }}
+            <hr>
+    {% endfor %}
+
+  {% if lots_list.has_previous %}
+    <a href="?page={{ lots_list.previous_page_number }}"><b><<</b> </a>
+  {% endif %}
+
+  {% for lot in lots_list.paginator.page_range %}
+    {% if lot == lots_list.number %}
+      {{ page }}
+    {% else %}
+      <a href="?page={{ page }}">{{ page }}</a>
+    {% endif %}
+  {% endfor %}
+
+  {% if lots_list.has_next %}
+    <a href="?page={{ lots_list.next_page_number }}"><b>>></b></a>
+  {% endif %}
+<br><br>
+
+<a href="{% url 'core:new_lot' %}" class="btn btn-danger mt-3">Add a new lot</a>
+
+{% endblock content %}
+
+

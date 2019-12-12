@@ -3,11 +3,11 @@
 {% load static %}
 
 {% block content %}
-<b>Add a new lot</b>
+<b>Make bet</b>
 <br/>
 <hr>
 {% if user.is_authenticated %}
-      <form action="{% url 'core:new_lot' %}" method="post" novalidate>
+      <form action="{% url 'core:new_bet' %}" method="post" novalidate>
           {% csrf_token %}
           <table>
             {{ form.as_table }}

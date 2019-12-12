@@ -1,0 +1,40 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+{% block content %}
+
+<h5 class="display-5">Lot #{{ lot.pk }}: {{ lot.name }}</h5>
+created by
+      {% if user.pk == lot.user_id.pk %}
+          <b><font color="red" >{{lot.user_id.get_full_name}}</font></b>
+      {% else %}
+          {{lot.user_id.get_full_name}}
+      {% endif %}
+on {{ lot.created_at }}
+<hr>
+<b>Category: </b>{{ lot.category_id.name }}<br>
+<a href="{{ lot.url }}">url</a>
+<br>
+{% if lot.image %}
+    <img class="card-img" style="width: 300px;"  src="{{ lot.image.url }}" alt="No_picture">
+{% else %}
+    <img class="card-img" style="width: 300px;"  src="{% static 'img/no_img.png' %}" alt="No_picture">
+{% endif %}
+<br>
+<b>Description: </b>{{ lot.info }}
+<hr>
+
+<b>Related auctions ({{auctions_count}}):</b>
+<ul>
+   {% for auction in auctions_list %}
+       <li><a href="{{ auction.get_absolute_url }}"> <h7 class="card-title">#{{ auction.pk }}, created by {{ auction.user_id.get_full_name }} on {{ auction.created_at }} </h7></a></li>
+   {% endfor %}
+</ul>
+<br>
+<table>
+
+</table>
+
+
+{% endblock content %}

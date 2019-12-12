@@ -3,14 +3,105 @@
 {% load static %}
 
 {% block content %}
-{{ auction.lot_id }}
-  <div class="jumbotron jumbotron-fluid">
-    <div class="container">
-      <h1 class="display-4">{{ auction.starting_price }}</h1>
-      <p class="lead">{{ auction.current_price }}</p>
-    </div>
-  </div>
-  {% for bet in bets_list %}
-     {{ bet.amount }}
-  {% endfor %}
+
+<h5 class="display-5">Auction #{{ auction.pk }}</h5>
+created by
+      {% if user.pk == auction.user_id.pk %}
+          <b><font color="red">{{auction.user_id.get_full_name}}</font></b>
+      {% else %}
+          {{auction.user_id.get_full_name}}
+      {% endif %}
+on {{ auction.created_at }}
+<hr>
+<table>
+  <td valign="top" width="400">
+    starting price: <b>{{ auction.starting_price }} </b> <br>
+    {% if auction.is_blind == False %}
+         current price: <b>{{ auction.current_price }}</b> <br>
+    {% else %}
+        {% if auction.is_finished %}
+            current price: <b>{{ auction.current_price }}</b> <br>
+        {% endif %}
+    {% endif %}
+    minimum bet step: <b>{{ auction.min_bet_step }}</b> <br>
+    blitz price: <b>{{ auction.blitz_price }}</b> <br>
+    auction type: <b>{% if auction.action_type_id == 0 %} decrease price {% else %} increase price {% endif %}</b> <br>
+  </td>
+  <td valign="top" width="600">
+    bid end datetime: <b>{{ auction.bid_end_datetime }}</b> <br>
+    is blind: <b>{{ auction.is_blind }}</b> <br>
+    is finished: <b>{% if auction.is_finished %}
+                        <font color="red" >{{ auction.is_finished }}</font>
+                    {% else %}
+                        <font color="green" >{{ auction.is_finished }} </font>
+                    {% endif %}
+                 </b><br>
+    {% if auction.winner %}
+        winner: <b><font color="red" >{{ auction.winner.get_full_name }}</font></b><br>
+    {% endif %}
+    is enabled: <b>{{ auction.is_enabled }}</b>
+  </td>
+</table>
+
+<hr>
+
+<a href="{{ auction.lot_id.get_absolute_url }}"><h5 class="display-5">Lot: <b>{{ auction.lot_id.name }}</b> </h5></a>
+<b>Category: </b>{{ auction.lot_id.category_id.name }}<br>
+<b>Description: </b>{{ auction.lot_id.info }}
+
+<hr>
+
+<table>
+    <tr>
+       {% if messages %}
+          <ul class="messages">
+             {% for message in messages %}
+              <li class="{{ message.tags }}" color="red" ><font color="red">{{ message }}</font></li>
+             {% endfor %}
+          </ul>
+       {% endif %}
+    </tr>
+
+    <tr>
+    <td valign="top" width="400">
+        <b>Bets ({{bets_count}}):</b>
+        {% if user.is_authenticated %}
+          {% if not auction.is_finished %}
+            <form action="{% url 'core:new_bet' %}" method="POST" novalidate>
+                {% csrf_token %}
+                <input type="hidden" name="pk" value={{auction.pk}}>
+                make a new bet: <input type="number" size="10" name="new_bet_input" required>
+                <button type="submit">Do it!</button>
+            </form>
+         {% endif %}
+       {% endif %}
+    </td>
+
+    <td valign="top" width="600">
+        <b>Comments ({{comments_count}}):</b>
+        {% if user.is_authenticated %}
+            <form action="{% url 'core:new_comment' %}" method="POST" novalidate>
+                {% csrf_token %}
+                <input type="hidden" name="pk" value={{auction.pk}}>
+                <input type="text" size="60" name="new_comment_input" required>
+                <button type="submit">Comment it!</button>
+            </form>
+       {% endif %}
+    </td>
+
+    </tr>
+    <tr>
+        <td valign="top" width="400">
+            {% for bet in bets_list %}
+               <b>{{bet.amount}}</b> by {{bet.user_id.name}} on {{bet.bet_date}} <br>
+            {% endfor %}
+        </td>
+        <td valign="top" width="600">
+            {% for comment in comments_list %}
+            {{comment.user_id.get_full_name}} ({{comment.created_at}}):<br> <b>{{comment.message}}</b><br>
+            {% endfor %}
+        </td>
+    </tr>
+</table>
+
 {% endblock content %}

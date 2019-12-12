@@ -44,15 +44,6 @@ class LoginView(FormView):
         login(self.request, user)
         return super().form_valid(form)
 
-# @login_required
-# def login(request):
-#     if request.method == 'POST':
-#         username = request.POST.get('username')
-#         password = request.POST.get('password')
-#         user = authenticate(request, username=username, password=password)
-#         if user:
-#             login(request, user)
-
 
 class LogoutView(RedirectView):
     pattern_name = 'core:index'

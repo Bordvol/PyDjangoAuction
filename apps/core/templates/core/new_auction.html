@@ -3,15 +3,18 @@
 {% load static %}
 
 {% block content %}
-<b>Add a new lot</b>
+<b>Create a new auction</b>
 <br/>
 <hr>
 {% if user.is_authenticated %}
-      <form action="{% url 'core:new_lot' %}" method="post" novalidate>
+      <form action="{% url 'core:new_auction' %}" method="post" novalidate>
           {% csrf_token %}
           <table>
             {{ form.as_table }}
+
           </table>
+          <br/>
+          date format [ '%Y-%m-%d %H:%M:%S' ], for example 2019-12-31 23:59:59
           <br/>
           <br/>
           <button type="submit">Save</button>
